@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmdevelop.propertymanagement.mapper.CommunityMapper">
+
+    <resultMap id="communityResultMap" type="com.pmdevelop.propertymanagement.entity.Community">
+        <result property="communityId" column="community_id"/>
+        <result property="communityName" column="community_name"/>
+        <result property="address" column="address"/>
+        <result property="totalNumber" column="total_number"/>
+        <result property="adminAccount" column="admin_account"/>
+        <result property="adminPassword" column="admin_password"/>
+        <result property="adminLastLoginTime" column="admin_last_login_time"/>
+    </resultMap>
+
+    <!-- 这里定义 SQL 语句 -->
+    <select id="findAll" resultMap="communityResultMap">
+        SELECT * FROM community;
+    </select>
+
+    <select id="findById" parameterType="Integer" resultMap="communityResultMap">
+        SELECT * FROM community WHERE community_id = #{id};
+    </select>
+
+    <insert id="insert" parameterType="com.pmdevelop.propertymanagement.entity.Community">
+        INSERT INTO community (community_name, address, total_number, admin_account, admin_password, admin_last_login_time)
+        VALUES (#{communityName}, #{address}, #{totalNumber}, #{adminAccount}, #{adminPassword}, #{adminLastLoginTime});
+    </insert>
+
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM community WHERE community_id = #{id};
+    </delete>
+
+</mapper>

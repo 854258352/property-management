@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pmdevelop.propertymanagement.mapper.PaymentRecordMapper">
+
+    <resultMap id="paymentResultMap" type="com.pmdevelop.propertymanagement.entity.PaymentRecord">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="propertyFee" column="property_fee"/>
+        <result property="parkingFee" column="parking_fee"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="paymentStatus" column="payment_status"/>
+        <result property="paymentTime" column="payment_time"/>
+        <result property="roomId" column="room_id"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="paymentResultMap">
+        SELECT * FROM payment_record;
+    </select>
+
+    <select id="findById" parameterType="int" resultMap="paymentResultMap">
+        SELECT * FROM payment_record WHERE id = #{id};
+    </select>
+
+    <select id="getPaymentRecordByRoomId"
+            resultMap="paymentResultMap">
+        SELECT *
+        FROM payment_record
+        WHERE room_id = #{roomId}
+        <if test="paymentStatus != null">
+            AND payment_status = #{paymentStatus}
+        </if>
+    </select>
+
+
+    <select id="getPaymentList"
+            resultMap="paymentResultMap"
+            parameterType="map">
+        SELECT *
+        FROM payment_record
+        WHERE room_id IN (
+        SELECT id
+        FROM room_info
+        <where>
+            <if test="communityId != null">
+                AND community_id = #{communityId}
+            </if>
+            <if test="building != null">
+                AND building = #{building}
+            </if>
+            <if test="unit != null">
+                AND unit = #{unit}
+            </if>
+            <if test="roomNum != null and roomNum != ''">
+                AND room_num = #{roomNum}
+            </if>
+        </where>
+        )
+    </select>
+    <select id="getPayBill" resultMap="paymentResultMap">
+        SELECT *
+        FROM payment_record
+        WHERE room_id IN (
+        SELECT id
+        FROM room_info
+        <where>
+            <if test="communityId != null">
+                AND community_id = #{communityId}
+            </if>
+            <if test="building != null">
+                AND building = #{building}
+            </if>
+            <if test="unit != null">
+                AND unit = #{unit}
+            </if>
+            <if test="roomNum != null and roomNum != ''">
+                AND room_num = #{roomNum}
+            </if>
+        </where>
+        )
+        ORDER BY end_time DESC
+        LIMIT 1
+    </select>
+
+
+    <insert id="insert" parameterType="com.pmdevelop.propertymanagement.entity.PaymentRecord">
+        INSERT INTO payment_record (user_id, property_fee, parking_fee, start_time, end_time, payment_status, payment_time, room_id)
+        VALUES (#{userId}, #{propertyFee}, #{parkingFee}, #{startTime}, #{endTime}, #{paymentStatus}, #{paymentTime}, #{roomId});
+    </insert>
+
+    <update id="update" parameterType="com.pmdevelop.propertymanagement.entity.PaymentRecord">
+        UPDATE payment_record
+        SET user_id = #{userId},
+            property_fee = #{propertyFee},
+            parking_fee = #{parkingFee},
+            start_time = #{startTime},
+            end_time = #{endTime},
+            payment_status = #{paymentStatus},
+            payment_time = #{paymentTime},
+            room_id = #{roomId}
+        WHERE id = #{id};
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM payment_record WHERE id = #{id};
+    </delete>
+
+</mapper>

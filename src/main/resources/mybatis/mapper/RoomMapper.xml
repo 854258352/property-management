@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmdevelop.propertymanagement.mapper.RoomMapper">
+
+    <resultMap id="roomResultMap" type="com.pmdevelop.propertymanagement.entity.Room">
+        <id property="id" column="id"/>
+        <result property="communityId" column="community_id"/>
+        <result property="building" column="building"/>
+        <result property="unit" column="unit"/>
+        <result property="roomNum" column="room_num"/>
+        <result property="parking" column="parking"/>
+        <result property="area" column="area"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="roomResultMap">
+        SELECT * FROM room_info;
+    </select>
+
+    <select id="findById" resultMap="roomResultMap" parameterType="Integer">
+        SELECT * FROM room_info WHERE id = #{id};
+    </select>
+    <select id="getBuildingByCommunityId" resultMap="roomResultMap">
+        SELECT * FROM room_info WHERE community_id = #{id};
+    </select>
+    <select id="getUnitByCommunityAndBuilding" resultMap="roomResultMap">
+        SELECT *
+        FROM room_info
+        WHERE community_id = #{communityId}
+        AND building = #{building}
+    </select>
+    <select id="getRoomsInfo" resultMap="roomResultMap">
+        SELECT *
+        FROM room_info
+        WHERE community_id = #{communityId}
+        AND building = #{building}
+        AND unit = #{unit}
+    </select>
+
+    <insert id="insert" parameterType="com.pmdevelop.propertymanagement.entity.Room">
+        INSERT INTO room_info (community_id, building, unit, room_num, parking, area)
+        VALUES (#{communityId}, #{building}, #{unit}, #{roomNum}, #{parking}, #{area});
+    </insert>
+
+    <update id="update" parameterType="com.pmdevelop.propertymanagement.entity.Room">
+        UPDATE room_info
+        SET community_id = #{communityId}, building = #{building}, unit = #{unit},
+        room_num = #{roomNum}, parking = #{parking}, area = #{area}
+        WHERE id = #{id};
+    </update>
+
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM room_info WHERE id = #{id};
+    </delete>
+
+</mapper>
