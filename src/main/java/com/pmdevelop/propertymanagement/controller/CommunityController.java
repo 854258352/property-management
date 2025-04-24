@@ -55,9 +55,9 @@ public class CommunityController {
     }
 
     //根据小区的Id和楼号，查询该楼中的单元
-    @GetMapping("/unit/{communityId}/{building}")
-    public ApiResponse<Object> getUnitByCommunityAndBuilding(@PathVariable("communityId") Integer communityId,
-                                                              @PathVariable("building") Integer building) {
+    @GetMapping("/unit")
+    public ApiResponse<Object> getUnitByCommunityAndBuilding(@RequestParam(value = "communityId", required = true) Integer communityId,
+                                                              @RequestParam(value = "building", required = true) Integer building) {
         List<Map<String,Integer>> result = roomService.getUnitByCommunityAndBuilding(communityId, building);
         if (result != null && !result.isEmpty()) {
             return ApiResponse.success(result);
